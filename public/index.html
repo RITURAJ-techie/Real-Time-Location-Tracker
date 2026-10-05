@@ -30,19 +30,32 @@
         }).addTo(map);
 
         function getUsersCurrentLocation(){
-            if("geolocation" in navigator){
+            return new Promise((res,rej)=>{
+                if("geolocation" in navigator){
+
                 navigator.geolocation.getCurrentPosition(
-                    (position)=>{
+                    (position) => {
                         console.log(`Got user's location`,position);
+
+                        const latitude = position.coords.latitude;
+
+                        const longitude = position.coords.longitude;
+
+                        res({ latitude,longitude });
                     },
-                    (err)=>console.log(`Error getting user's current location`,{ err })
+                    (err)=>{
+                        rej(err);
+                    },
+
+                    { enableHighAccuracy: true },
                 );
             } else{
                 alert('Geolocation is not available in this browser')
             }
+            });
         }
 
-        getUsersCurrentLocation();
+        getUsersCurrentLocation().then((p)=> console.log({ p }));
     </script>
 
 </body>
